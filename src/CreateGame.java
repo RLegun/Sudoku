@@ -2,19 +2,26 @@ import java.util.Scanner;
 
 public class CreateGame {
     private static Scanner scanner = new Scanner(System.in);
-    private static UserGame userGame = new UserGame();
+    private static Game originalTable = new Game();
 
-    public static void newGame(){
+    public static void startGame() {
+        int n;
+        do {
+            Menu.showGameMenu();
+            originalTable.startGame();
+            n = scanner.nextInt();
+        } while (n != 2);
 
         do {
-            userGame.showGame();
             System.out.print("по горизонталі: ");
             int x = scanner.nextInt();
             System.out.print("по вертикалі: ");
             String y = scanner.next();
-            System.out.print("поставити число : ");
+            System.out.print("ваше число : ");
             int z = scanner.nextInt();
-            userGame.putNumber(x,y,z);
-        } while (true);
+            originalTable.putNumbers(x, y, z);
+        } while (!originalTable.result());
+        System.out.println("                                       УРА ПЕРЕМОГА!!!");
+        System.exit(0);
     }
 }

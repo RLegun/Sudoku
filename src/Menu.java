@@ -7,15 +7,14 @@ public class Menu {
 
     public static void showMenu() throws InputMismatchException {
 
-        showMainMenu();
+        showGameMenu();
 
         do {
-            System.out.print("--> ");
             choice = scanner.nextInt();
 
             switch (choice) {
                 case 1:
-                    CreateGame.newGame();
+                    CreateGame.startGame();
                     break;
                 case 0:
                     System.out.println("Exit...");
@@ -28,12 +27,9 @@ public class Menu {
         System.exit(0);
     }
 
-    public static void showMainMenu() {
-        System.out.println("****************************************************");
-        System.out.println("*                      MENU:                       *");
-        System.out.println("****************************************************");
-        System.out.println("* 1. СТВОРИТИ НОВУ ГРУ:                            *");
-        System.out.println("* 0. вийти із меню:                                *");
-        System.out.println("****************************************************");
+    public static void showGameMenu() {
+        System.out.println("=====================================");
+        System.out.println(" ВИБРАТИ ГРУ '1' : ЗАПУСТИТИ ГРУ '2' ");
+        System.out.println("=====================================");
     }
 }
