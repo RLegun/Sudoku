@@ -1,14 +1,22 @@
+import java.time.LocalDate;
 import java.util.Scanner;
 
-public class CreateGame {
+public class Session {
     private static Scanner scanner = new Scanner(System.in);
-    private static Game originalTable = new Game();
+    private static Game game = new Game(new Field(), new Player());
+    private static LocalDate date = LocalDate.now();
+
+    public static void newSession(){
+        Menu.newPlayer();
+        game.getPlayer().setName(scanner.next());
+        startGame();
+    }
 
     public static void startGame() {
         int n;
         do {
             Menu.showGameMenu();
-            originalTable.startGame();
+            game.getField().GenerateUserTable();
             n = scanner.nextInt();
         } while (n != 2);
 
@@ -19,9 +27,17 @@ public class CreateGame {
             String y = scanner.next();
             System.out.print("ваше число : ");
             int z = scanner.nextInt();
-            originalTable.putNumbers(x, y, z);
-        } while (!originalTable.result());
+            game.getField().fillTable(x, y, z);
+        } while (!game.getField().CheckResult());
         System.out.println("                                       УРА ПЕРЕМОГА!!!");
         System.exit(0);
+    }
+
+    public static String getPlayer() {
+        return game.getPlayer().getName();
+    }
+
+    public static LocalDate getDate() {
+        return date;
     }
 }

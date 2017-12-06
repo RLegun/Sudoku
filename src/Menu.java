@@ -7,14 +7,14 @@ public class Menu {
 
     public static void showMenu() throws InputMismatchException {
 
-        showGameMenu();
+        newGame();
 
         do {
             choice = scanner.nextInt();
 
             switch (choice) {
                 case 1:
-                    CreateGame.startGame();
+                    Session.newSession();
                     break;
                 case 0:
                     System.out.println("Exit...");
@@ -31,5 +31,18 @@ public class Menu {
         System.out.println("=====================================");
         System.out.println(" ВИБРАТИ ГРУ '1' : ЗАПУСТИТИ ГРУ '2' ");
         System.out.println("=====================================");
+    }
+
+    public static void newPlayer(){
+        System.out.println("=================");
+        System.out.println("<<НОВИЙ ГРАВЕЦЬ>>");
+        System.out.println("=================");
+        System.out.print("Введіть ваше ім'я: ");
+    }
+
+    public static void newGame(){
+        System.out.println("=====================");
+        System.out.println("СТВОРИТИ НОВУ ГРУ '1'");
+        System.out.println("=====================");
     }
 }
