@@ -3,11 +3,14 @@ import java.util.Scanner;
 
 public class Session {
     private static Scanner scanner = new Scanner(System.in);
-    private static Game game = new Game(new Field(), new Player());
+    private static Game game = new Game(Field.getInstance(), Player.getInstance());
     private static LocalDate date = LocalDate.now();
 
     public static void newSession(){
-        Menu.newPlayer();
+        System.out.println("=================");
+        System.out.println("<<НОВИЙ ГРАВЕЦЬ>>");
+        System.out.println("=================");
+        System.out.print("Введіть ваше ім'я: ");
         game.getPlayer().setName(scanner.next());
         startGame();
     }
@@ -15,7 +18,15 @@ public class Session {
     public static void startGame() {
         int n;
         do {
-            Menu.showGameMenu();
+            int [][] table = game.getField().getTable();
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    table[i][j] = 0;
+                }
+            }
+            System.out.println("=====================================");
+            System.out.println(" ВИБРАТИ ГРУ '1' : ЗАПУСТИТИ ГРУ '2' ");
+            System.out.println("=====================================");
             game.getField().GenerateUserTable();
             n = scanner.nextInt();
         } while (n != 2);

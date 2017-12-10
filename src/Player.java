@@ -13,4 +13,10 @@ public class Player {
     public String toString() {
         return name;
     }
+
+
+    public static Player getInstance(){
+        return new Player();
+    }
+
 }

@@ -1,23 +1,15 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Field {
     private Random rnd = new Random();
     private final int row = 9;
     private final int col = 9;
+    private List<Integer> list = new ArrayList<>();
     private int[][] userTable = new int[row][col];
-    private int[][] table = {
-            {1, 2, 3, 4, 5, 6, 7, 8, 9},
-            {4, 5, 6, 7, 8, 9, 1, 2, 3},
-            {7, 8, 9, 1, 2, 3, 4, 5, 6},
-            {2, 3, 4, 5, 6, 7, 8, 9, 1},
-            {5, 6, 7, 8, 9, 1, 2, 3, 4},
-            {8, 9, 1, 2, 3, 4, 5, 6, 7},
-            {3, 4, 5, 6, 7, 8, 9, 1, 2},
-            {6, 7, 8, 9, 1, 2, 3, 4, 5},
-            {9, 1, 2, 3, 4, 5, 6, 7, 8},
-    };
-
+    private int[][] table = new int[row][col];
 
     public void fillTable(int x, String y, int z) {
         String[] ABC = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
@@ -25,101 +17,109 @@ public class Field {
         showUserTable();
     }
 
-    public void transformationTable_1() {
-        int[][] table = new int[row][col];
-        for (int i = 0; i < this.table.length; i++) {
-            for (int j = 0; j < this.table[i].length; j++) {
-                table[j][i] = this.table[i][j];
+    public void fillList() {
+        for (int i = 1; i < 10; i++) {
+            list.add(i);
+        }
+    }
+
+    public boolean checkCol(int col, int item) {
+        for (int i = 0; i < 9; i++) {
+            if (table[i][col] == item) return false;
+        }
+        return true;
+    }
+
+    public boolean checkSection(int col, int row, int item) {
+        if (row <= 2) row = 0;
+        else if (row >= 6) row = 6;
+        else row = 3;
+
+        if (col <= 2)col = 0;
+        else if (col >= 6)col = 6;
+        else col = 3;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (table[row][col] == item) return false;
+                col++;
+            }
+            col -= 3;
+            row++;
+        }
+        return true;
+    }
+
+    public void fillField() {
+        fillList();
+        int backOneLine = 0;
+        int backTwoLine = 0;
+        int x = 9;
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < 9; j++) {
+                int ind = rnd.nextInt(x--);
+                int N = list.get(ind);
+                table[i][j] = N;
+                list.remove(ind);
             }
         }
-        this.table = table;
-    }
+        x = 9;
+        fillList();
+        int i = 1;
+        int j = 0;
+        int col = 0;
+        int row = 1;
 
-
-    public void transformationTable_2() {
-
-        int r1 = rnd.nextInt(9);
-        int r2;
-        if (r1 == 2 || r1 == 5) r2 = r1 - 2;
-        else if (r1 == 8) r2 = r1 - 2;
-        else r2 = r1 + 1;
-        int[] row_1 = new int[row];
-        int[] row_2 = new int[row];
-        int[] col_1 = new int[row];
-        int[] col_2 = new int[row];
-        for (byte i = 0; i < table.length; i++) {
-            row_1[i] = table[r1][i];
-            row_2[i] = table[r2][i];
-            table[r1][i] = row_2[i];
-            table[r2][i] = row_1[i];
-        }
-        for (int i = 0; i < table.length; i++) {
-            col_1[i] = table[i][r1];
-            col_2[i] = table[i][r2];
-            table[i][r1] = col_2[i];
-            table[i][r2] = col_1[i];
-        }
-    }
-
-    public void transformationTable_3() {
-        int r1;
-        int r2;
-        if (rnd.nextInt(3) == 1) {
-            r1 = 3;
-            r2 = 0;
-        } else if (rnd.nextInt(3) == 2) {
-            r1 = 6;
-            r2 = 3;
-        } else {
-            r1 = 0;
-            r2 = 6;
-        }
-        int[][] row_1 = new int[3][row];
-        int[][] row_2 = new int[3][row];
-        int[][] col_1 = new int[row][3];
-        int[][] col_2 = new int[row][3];
-        for (byte i = 0; i < 3; i++) {
-            for (byte j = 0; j < 9; j++) {
-                row_1[i][j] = table[r1][j];
-                row_2[i][j] = table[r2][j];
-                table[r1][j] = row_2[i][j];
-                table[r2][j] = row_1[i][j];
+        while (table[8][8] == 0) {
+            while (table[i][8] == 0) {
+                int ind = rnd.nextInt(x);
+                int N = list.get(ind);
+                if (checkCol(col, N) && checkSection(col, row, N)) {
+                    table[i][j++] = N;
+                    col++;
+                    x--;
+                    list.remove(ind);
+                    backOneLine = 0;
+                }
+                if (backTwoLine > 15) {
+                    for (int k = 0; k < 3; k++) {
+                        for (int l = 0; l < 9; l++) {
+                            table[i][l] = 0;
+                        }
+                        i--;
+                    }
+                    list.removeAll(list);
+                    fillList();
+                    x = 9;
+                    j = 0;
+                    col = 0;
+                    backTwoLine = 0;
+                }
+                backOneLine++;
+                if (backOneLine > 20) {
+                    for (int k = 0; k < 9; k++)
+                        table[i][k] = 0;
+                    list.removeAll(list);
+                    fillList();
+                    x = 9;
+                    j = 0;
+                    col = 0;
+                    backOneLine = 0;
+                    backTwoLine++;
+                }
             }
-            r1++;
-            r2++;
-        }
-        r1 -= 3;
-        r2 -= 3;
-        for (int i = 0; i < table.length; i++) {
-            for (int j = 0; j < table.length - 6; j++) {
-                col_1[i][j] = table[i][r1];
-                col_2[i][j] = table[i][r2];
-                table[i][r1] = col_2[i][j];
-                table[i][r2] = col_1[i][j];
-                r1++;
-                r2++;
-            }
-            r1 -= 3;
-            r2 -= 3;
+            fillList();
+            i++;
+            x = 9;
+            j = 0;
+            col = 0;
+            row++;
         }
     }
 
-    public void mixTable() {
-        int r = rnd.nextInt(99);
-        int x = 0;
-        do {
-            transformationTable_1();
-            transformationTable_2();
-            transformationTable_3();
-            transformationTable_2();
-            transformationTable_1();
-            transformationTable_3();
-            x++;
-        } while (x != r);
-    }
 
     public void GenerateUserTable() {
-        mixTable();
+        fillField();
         for (int i = 0; i < userTable.length; i++) {
             for (int j = 0; j < userTable[i].length; j++) {
                 userTable[i][j] = table[i][j];
@@ -143,13 +143,20 @@ public class Field {
             }
         }
         return item == 81;
+    }
 
+    public int[][] getTable() {
+        return table;
+    }
+
+    public static Field getInstance(){
+        return new Field();
     }
 
     public void showUserTable() {
         int X = 1;
         System.out.println("==========================       гравець: "
-                + Session.getPlayer()+"," + "  дата: " + Session.getDate());
+                + Session.getPlayer() + "," + "  дата: " + Session.getDate());
         System.out.println(" ~ A B C   D E F   G H I ~       ваш час: 00:00 ");
         for (int i = 0; i < userTable.length; i++) {
             if (i == 3 || i == 6)
