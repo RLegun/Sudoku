@@ -50,6 +50,29 @@ public class Field {
         return true;
     }
 
+    public int checkForOpen(int col, int row, int item) {
+        int count = 0;
+        if (row <= 2) row = 0;
+        else if (row >= 6) row = 6;
+        else row = 3;
+
+        if (col <= 2)col = 0;
+        else if (col >= 6)col = 6;
+        else col = 3;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (userTable[row][j] == item) count++;
+            }
+            row++;
+            for (int j = 0; j < 9; j++) {
+                if (userTable[j][col] == item) count++;
+            }
+            col++;
+        }
+        return count;
+    }
+
     public void fillField() {
         fillList();
         int backOneLine = 0;
@@ -125,13 +148,30 @@ public class Field {
                 userTable[i][j] = table[i][j];
             }
         }
+        int x = 9;
+        for (int k = 0; k < 9; k++) {
+            int ind = rnd.nextInt(x);
+            int item = list.get(ind);
+            for (int l = 0; l < 9; l++) {
+                if (userTable[k][l] == item) {
+                    userTable[k][l] = 0;
+                    list.remove(ind);
+                    x--;
+                }
+            }
+        }
         int open = 0;
         do {
             int i = rnd.nextInt(9);
             int j = rnd.nextInt(9);
+            //------------------------------------------
+            int temp = userTable[i][j];
             userTable[i][j] = 0;
+            if (checkForOpen(j, i, temp) == 4) {
+                userTable[i][j] = temp;
+            }
             open++;
-        } while (open != 1);
+        } while (open != 81);
         showUserTable();
     }
 
